@@ -20,36 +20,38 @@ Needs Chrome 116 or later and Node 20 or later (Node is only for the demo server
 ```bash
 npm install
 npm run demo          # serves the demo portals at http://localhost:8000
-```
+Open chrome://extensions, turn on Developer mode, choose Load unpacked, and select the extension/ folder (not the repo root).
 
-1. Open `chrome://extensions`, turn on **Developer mode**, choose **Load unpacked**, and select the **`extension/`** folder (not the repo root).
-2. Open <http://localhost:8000/broken/>.
-3. Press the HealthBridge toolbar button, or **Alt+Shift+H**. The side panel opens for that tab.
+Open http://localhost:8000/broken/.
 
-The demo portals hold synthetic data only. `broken/` has 17 planted failures, listed in [demo-portal/README.md](demo-portal/README.md). `fixed/` is the same page with those failures fixed, and it gets an A.
+Press the HealthBridge toolbar button, or Alt+Shift+H. The side panel opens for that tab.
 
-## Tests
+The demo portals hold synthetic data only. broken/ has 17 planted failures, listed in demo-portal/README.md. fixed/ is the same page with those failures fixed, and it gets an A.
 
-```bash
+Tests
+Bash
 npm test              # unit tests (node:test, no browser)
 npx puppeteer browsers install chrome   # once, for the end-to-end tests
 npm run test:e2e      # loads the real extension into headless Chrome
-```
-
 The end-to-end suite drives the real unpacked extension in Chrome. It covers:
-- the grades on both demo portals, and HealthBridge-only findings;
-- booking a visit with the keyboard only, and the values landing in the real form;
-- site errors after sending, and refilling answers after a reload;
-- React-controlled inputs, by checking React's own state;
-- every display setting beating the site's CSS and turning off cleanly, and arriving before a slow page finishes loading on always-allowed sites;
-- the permission model, using a real toolbar click: no access before it, access after it, kept on the same site and lost on another;
-- the side panel's own accessibility: axe finds **zero** WCAG 2.2 A/AA or best-practice violations in 14 panel states.
 
-On Linux, Chrome needs its usual shared libraries. On Amazon Linux or Fedora, run `sudo dnf install atk at-spi2-atk cups-libs libxkbcommon alsa-lib mesa-libgbm pango libXcomposite libXdamage libXrandr nss`.
+the grades on both demo portals, and HealthBridge-only findings;
 
-## How it works
+booking a visit with the keyboard only, and the values landing in the real form;
 
-```
+site errors after sending, and refilling answers after a reload;
+
+React-controlled inputs, by checking React's own state;
+
+every display setting beating the site's CSS and turning off cleanly, and arriving before a slow page finishes loading on always-allowed sites;
+
+the permission model, using a real toolbar click: no access before it, access after it, kept on the same site and lost on another;
+
+the side panel's own accessibility: axe finds zero WCAG 2.2 A/AA or best-practice violations in 14 panel states.
+
+On Linux, Chrome needs its usual shared libraries. On Amazon Linux or Fedora, run sudo dnf install atk at-spi2-atk cups-libs libxkbcommon alsa-lib mesa-libgbm pango libXcomposite libXdamage libXrandr nss.
+
+How it works
 Toolbar button / Alt+Shift+H / right-click menu
         │  (Chrome grants activeTab for this page)
         ▼
@@ -71,43 +73,43 @@ Toolbar button / Alt+Shift+H / right-click menu
 │ main.js tabs · api.js messaging · views/{read,fill,check,display}.js │
 │ speech.js read aloud · ai.js on-device AI · shared/*.js pure logic   │
 └───────────────────────────────────────────────────────────────────────┘
-```
-
-| Message (panel → page) | What it does |
-|---|---|
-| `SCAN` | runs axe and HealthBridge checks; returns element ids, never page HTML |
-| `READ_PAGE` | headings, text, tables as rows, a form summary, buttons and links |
-| `READ_FORM` / `FILL_FIELD` / `SUBMIT_FORM` / `CHECK_FORM` | the form helper |
-| `HIGHLIGHT` / `SHOW_FIELD` / `ACTIVATE` | outline something on the page, or press it |
-
+Message (panel → page)	What it does
+SCAN	runs axe and HealthBridge checks; returns element ids, never page HTML
+READ_PAGE	headings, text, tables as rows, a form summary, buttons and links
+READ_FORM / FILL_FIELD / SUBMIT_FORM / CHECK_FORM	the form helper
+HIGHLIGHT / SHOW_FIELD / ACTIVATE	outline something on the page, or press it
 Design choices worth knowing:
 
-- **Access only when asked.** Nothing is injected until the user presses the button, which grants `activeTab` for that page. "Always allow on this site" requests a per-site optional permission from the panel, and those sites get display settings at `document_start` (no flash of the original colors). The `localhost` host permissions are for the demo only; remove them in a store build.
-- **Nothing written into the page's DOM.** The panel refers to elements by opaque ids held in the content script's memory, so the portal's scripts and analytics can't see markers of assistive-technology use. Highlights and the reading guide are drawn in closed shadow roots.
-- **Untrusted text, privileged panel.** The panel builds DOM with text nodes only (`ui.js` `h()`), and links are limited to `https:`.
-- **One stylesheet per page.** Display settings are tracked per document (`documentId`), and updates for a tab run one at a time, so quick toggles can't interleave and "off" always removes the stylesheet.
-- **Honest guesses.** When the site gives no label or name, HealthBridge guesses and says so. It never writes its guesses into the page.
+Access only when asked. Nothing is injected until the user presses the button, which grants activeTab for that page. "Always allow on this site" requests a per-site optional permission from the panel, and those sites get display settings at document_start (no flash of the original colors). The localhost host permissions are for the demo only; remove them in a store build.
 
-### The grade
+Nothing written into the page's DOM. The panel refers to elements by opaque ids held in the content script's memory, so the portal's scripts and analytics can't see markers of assistive-technology use. Highlights and the reading guide are drawn in closed shadow roots.
 
-Only WCAG 2.1 A/AA results count, because that is the version US health rules (HHS Section 504, ADA Title II) cite. Each failed axe rule costs `weight × (1 + min(log2(elements), 3) / 3)`, with weights critical 10, serious 6, moderate 3 and minor 1. Score = 100 − cost. A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 60, otherwise F. Any critical problem caps the grade at C. WCAG 2.2 results and HealthBridge's own checks are listed separately and never change the grade. See `extension/shared/scoring.js`.
+Untrusted text, privileged panel. The panel builds DOM with text nodes only (ui.js h()), and links are limited to https:.
 
-## Privacy
+One stylesheet per page. Display settings are tracked per document (documentId), and updates for a tab run one at a time, so quick toggles can't interleave and "off" always removes the stylesheet.
 
-Page content is processed in the browser and never sent anywhere. HealthBridge has no servers, accounts or analytics. Display settings live in `chrome.storage.local`. Form answers are kept in memory (`chrome.storage.session`) for up to an hour so they can be put back after a sign-out, and Chrome deletes them when it closes. Online "Google" voices, which send text to Google, are off unless the user allows them. Details are in [docs/PRIVACY.md](docs/PRIVACY.md).
+Honest guesses. When the site gives no label or name, HealthBridge guesses and says so. It never writes its guesses into the page.
 
-## Limitations
+The grade
+Only WCAG 2.1 A/AA results count, because that is the version US health rules (HHS Section 504, ADA Title II) cite. Each failed axe rule costs weight × (1 + min(log2(elements), 3) / 3), with weights critical 10, serious 6, moderate 3 and minor 1. Score = 100 − cost. A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 60, otherwise F. Any critical problem caps the grade at C. WCAG 2.2 results and HealthBridge's own checks are listed separately and never change the grade. See extension/shared/scoring.js.
 
-- Content inside iframes (often payments or chat) is not scanned or read. The report says how many frames were skipped.
-- Custom comboboxes and other non-native widgets can't be filled. The helper says so and offers "Show on page". Native inputs, selects, radio and checkbox groups, and ARIA radio groups, checkboxes and switches are supported.
-- Desktop Chrome only. Edge has the same extension APIs but hasn't been tested. Chrome for Android doesn't run extensions.
-- English only for now (glossary, reading level, plain-language text).
-- Word-by-word highlighting depends on the voice. Most local Windows and macOS voices support it; elsewhere the whole block is highlighted.
-- Automated checks find only some problems. The report card says so.
+Privacy
+Page content is processed in the browser and never sent anywhere. HealthBridge has no servers, accounts or analytics. Display settings live in chrome.storage.local. Form answers are kept in memory (chrome.storage.session) for up to an hour so they can be put back after a sign-out, and Chrome deletes them when it closes. Online "Google" voices, which send text to Google, are off unless the user allows them. Details are in docs/PRIVACY.md.
 
-## Project layout
+Limitations
+Content inside iframes (often payments or chat) is not scanned or read. The report says how many frames were skipped.
 
-```
+Custom comboboxes and other non-native widgets can't be filled. The helper says so and offers "Show on page". Native inputs, selects, radio and checkbox groups, and ARIA radio groups, checkboxes and switches are supported.
+
+Desktop Chrome only. Edge has the same extension APIs but hasn't been tested. Chrome for Android doesn't run extensions.
+
+English only for now (glossary, reading level, plain-language text).
+
+Word-by-word highlighting depends on the voice. Most local Windows and macOS voices support it; elsewhere the whole block is highlighted.
+
+Automated checks find only some problems. The report card says so.
+
+Project layout
 extension/          load this folder in chrome://extensions
   manifest.json  background.js
   content/       core, checks, scan, reader, forms, display, early (+ css/)
@@ -120,10 +122,7 @@ scripts/            serve.mjs, vendor.mjs (copy axe), pack.mjs (zip), make-icons
 test/unit/          node:test
 test/e2e/           Puppeteer + headless Chrome
 docs/               PLAN.md (hackathon plan and pitch), DEMO.md, PRIVACY.md
-```
+npm run pack writes dist/healthbridge-<version>.zip for submission or a clean-install test.
 
-`npm run pack` writes `dist/healthbridge-<version>.zip` for submission or a clean-install test.
-
-## License
-
-HealthBridge code: MIT (see `LICENSE`). axe-core is © Deque Systems and licensed under MPL-2.0. Its notice is kept in `extension/lib/axe.min.js` and `extension/lib/axe-core-LICENSE.txt`.
+License
+HealthBridge code: MIT (see LICENSE). axe-core is © Deque Systems and licensed under MPL-2.0. Its notice is kept in extension/lib/axe.min.js and extension/lib/axe-core-LICENSE.txt.

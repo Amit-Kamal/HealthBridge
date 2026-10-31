@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthBridge</title>
+  <link rel="stylesheet" href="sidepanel.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <header class="top">
+    <h1>HealthBridge</h1>
+    <p class="tagline">Helps you use this page. It changes only what you see.</p>
+    <div id="page-bar" class="page-bar" aria-live="polite"></div>
+  </header>
+
+  <section id="intro" class="notice intro" aria-labelledby="intro-heading" hidden>
+    <h2 id="intro-heading">Welcome to HealthBridge</h2>
+    <ul>
+      <li>Read a page in a simpler way, with hard words explained and read aloud.</li>
+      <li>Fill in a form one question at a time.</li>
+      <li>Check a site for problems, and tell the clinic about them.</li>
+      <li>Change colors, spacing and sizes, just for you.</li>
+    </ul>
+    <p><strong>Your information stays on this computer.</strong> HealthBridge never sends what is on the page anywhere, and it never sends a form unless you choose Send.</p>
+    <p>It only works on a page after you press the HealthBridge button, and it keeps form answers in memory for up to an hour so it can put them back if a site signs you out.</p>
+    <button type="button" id="intro-done" class="primary">Got it</button>
+  </section>
+
+  <nav aria-label="HealthBridge tools">
+    <div role="tablist" class="tabs" aria-label="HealthBridge tools">
+      <button role="tab" id="tab-read" aria-controls="panel-read" aria-selected="true">Read this page</button>
+      <button role="tab" id="tab-fill" aria-controls="panel-fill" aria-selected="false" tabindex="-1">Fill in a form</button>
+      <button role="tab" id="tab-check" aria-controls="panel-check" aria-selected="false" tabindex="-1">Check this site</button>
+      <button role="tab" id="tab-display" aria-controls="panel-display" aria-selected="false" tabindex="-1">Display</button>
+    </div>
+  </nav>
+
+  <main>
+    <section role="tabpanel" id="panel-read" aria-labelledby="tab-read"></section>
+    <section role="tabpanel" id="panel-fill" aria-labelledby="tab-fill" hidden></section>
+    <section role="tabpanel" id="panel-check" aria-labelledby="tab-check" hidden></section>
+    <section role="tabpanel" id="panel-display" aria-labelledby="tab-display" hidden></section>
+  </main>
+
+  <div id="announcer" class="visually-hidden" aria-live="polite"></div>
+</body>
+</html>

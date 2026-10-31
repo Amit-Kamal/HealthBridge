@@ -1,0 +1,6 @@
+/* HealthBridge: a thick two-color focus outline that shows on light and dark pages. */
+:focus-visible {
+  outline: 4px solid #ffbf47 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 8px #000 !important;
+}

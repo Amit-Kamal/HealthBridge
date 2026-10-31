@@ -1,0 +1,13 @@
+/* HealthBridge: bigger buttons and links (44 px, the WCAG 2.5.5 size). */
+a[href], button, select, textarea, summary,
+input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]),
+[role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="option"], [role="switch"] {
+  min-height: 44px !important;
+  min-width: 44px !important;
+}
+input[type="checkbox"], input[type="radio"] {
+  width: 28px !important;
+  height: 28px !important;
+}
+/* Links inside sentences can't grow without breaking the line, so pad them instead. */
+a[href] { padding-block: 0.25em !important; }

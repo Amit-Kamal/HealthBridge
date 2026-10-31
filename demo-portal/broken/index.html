@@ -1,0 +1,148 @@
+<!doctype html>
+<!--
+  Sunrise Health — DELIBERATELY BROKEN demo portal. All data is synthetic.
+  Each planted failure is marked PLANTED and listed in demo-portal/README.md.
+-->
+<html><!-- PLANTED: no lang attribute -->
+<head>
+  <meta charset="utf-8">
+  <!-- PLANTED: zoom blocked on mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title></title><!-- PLANTED: empty page title -->
+  <style>
+    body { font: 14px/1.35 Arial, sans-serif; color: #999; margin: 0; background: #fff; } /* PLANTED: low contrast (#999 on white is about 2.8:1) */
+    *:focus { outline: none; }                     /* PLANTED: keyboard focus is invisible */
+    .top { display: flex; align-items: center; gap: 16px; padding: 12px 24px; background: #f4f6f8; }
+    .brand { font-size: 18px; color: #4a90d9; font-weight: bold; }
+    .nav a { color: #aac4e0; text-decoration: none; margin-right: 12px; }
+    .timer { margin-left: auto; font-size: 12px; color: #bbb; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 8px 24px 48px; }
+    .card { border: 1px solid #eee; border-radius: 8px; padding: 16px 20px; margin: 18px 0; }
+    .h { font-size: 17px; color: #777; margin: 0 0 12px; font-weight: bold; }   /* PLANTED: looks like a heading, is not one */
+    .row { margin: 10px 0; }
+    .lbl { font-size: 12px; color: #aaa; margin-bottom: 2px; }
+    input, select, textarea { font: inherit; border: 1px solid #ddd; padding: 4px 6px; color: #888; }
+    .err { color: #e88; font-size: 12px; }
+    .send { width: 32px; height: 32px; border: 0; border-radius: 50%; background: #4a90d9; cursor: pointer; }
+    .grid { border-collapse: collapse; width: 100%; }
+    .grid td { border-bottom: 1px solid #eee; padding: 6px 8px; }
+    .grid tr:first-child td { font-weight: bold; color: #777; }
+    .flag { color: #e9a; font-weight: bold; }
+    .pay { display: inline-block; width: 16px; height: 16px; vertical-align: middle; } /* PLANTED: tiny target */
+    .tools { display: flex; gap: 2px; justify-content: flex-end; margin-bottom: 4px; }
+    .tool { display: block; width: 16px; height: 16px; line-height: 0; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; background: #fde; color: #d48; animation: pulse 1s infinite alternate; }
+    @keyframes pulse { from { opacity: 1; } to { opacity: .3; } }
+    .done { color: #6a6; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <span class="brand">Sunrise Health</span>
+    <span class="nav">
+      <a href="#book">Visits</a><a href="#labs">Results</a><a href="#bill">Billing</a>
+    </span>
+    <span class="badge">1 new message</span><!-- moving content for the Stop motion setting -->
+    <span class="timer">For your security, your session will expire in <span id="timer">2:00</span> due to inactivity.</span><!-- PLANTED: time limit with no way to extend -->
+  </div>
+
+  <div class="wrap"><!-- PLANTED: no <main> landmark and no real headings -->
+    <div class="card" id="book">
+      <div class="h">Schedule an appointment</div>
+      <form id="booking" novalidate>
+        <div class="row">
+          <input name="patient_name" placeholder="Full legal name"><!-- PLANTED: placeholder is the only label -->
+        </div>
+        <div class="row">
+          <div class="lbl">Date of birth</div>
+          <input name="dob" type="date"><!-- PLANTED: no label; the text above is not connected -->
+        </div>
+        <div class="row">
+          <label for="phone">Mobile phone</label>
+          <input id="phone" name="phone" type="tel"><!-- PLANTED: no autocomplete, so autofill can't help -->
+          <div class="err" id="phone-error" hidden>Required</div><!-- PLANTED: error text not connected to the field -->
+        </div>
+        <div class="row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email"><!-- PLANTED: no autocomplete -->
+        </div>
+        <div class="row">
+          <select name="visit_reason"><!-- PLANTED: no label -->
+            <option value="">Select…</option>
+            <option>New problem</option>
+            <option>Follow-up visit</option>
+            <option>Prescription refill</option>
+            <option>Annual physical</option>
+          </select>
+        </div>
+        <fieldset class="row">
+          <legend>Preferred time</legend>
+          <label><input type="radio" name="time" value="morning"> Morning</label>
+          <label><input type="radio" name="time" value="afternoon"> Afternoon</label>
+        </fieldset>
+        <div class="row">
+          <label><input type="checkbox" name="telehealth"> Video visit (telehealth)</label>
+        </div>
+        <div class="row">
+          <textarea name="notes" rows="3"></textarea><!-- PLANTED: no label -->
+        </div>
+        <button class="send" type="submit"><!-- PLANTED: icon-only button with no name -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+        </button>
+      </form>
+      <p class="done" id="confirm" hidden></p>
+    </div>
+
+    <div class="card" id="labs">
+      <div class="h">Lab Results — Collected 10/14/2026</div>
+      <div class="tools"><!-- PLANTED: 16 px targets packed 2 px apart (WCAG 2.2 target size) -->
+        <a href="#print" class="tool" aria-label="Print results"><svg width="16" height="16" viewBox="0 0 24 24" fill="#4a90d9"><path d="M6 2h12v6H6zM3 9h18v8h-3v5H6v-5H3z"/></svg></a>
+        <a href="#download" class="tool" aria-label="Download results"><svg width="16" height="16" viewBox="0 0 24 24" fill="#4a90d9"><path d="M11 2h2v12l4-4 1 1-6 6-6-6 1-1 4 4zM3 20h18v2H3z"/></svg></a>
+        <a href="#share" class="tool" aria-label="Share results"><svg width="16" height="16" viewBox="0 0 24 24" fill="#4a90d9"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/></svg></a>
+      </div>
+      <table class="grid"><!-- PLANTED: header row uses <td>, no caption -->
+        <tr><td>Test</td><td>Result</td><td>Flag</td><td>Reference range</td></tr>
+        <tr><td>Glucose, fasting</td><td>112 mg/dL</td><td class="flag">H</td><td>70-99 mg/dL</td></tr>
+        <tr><td>Hemoglobin A1c</td><td>5.9 %</td><td class="flag">H</td><td>4.0-5.6 %</td></tr>
+        <tr><td>LDL cholesterol</td><td>128 mg/dL</td><td class="flag">H</td><td>Under 100 mg/dL</td></tr>
+        <tr><td>Potassium</td><td>4.2 mmol/L</td><td></td><td>3.5-5.1 mmol/L</td></tr>
+        <tr><td>TSH</td><td>2.1 mIU/L</td><td></td><td>0.4-4.0 mIU/L</td></tr>
+      </table>
+    </div>
+
+    <div class="card" id="bill">
+      <div class="h">Billing &amp; Insurance</div>
+      <p>Following satisfaction of your annual deductible of $1,500, coinsurance of 20% is applicable to covered services rendered by in-network providers until your out-of-pocket maximum of $4,000 has been reached. A copay of $30 applies to each office visit. Services rendered by out-of-network providers may be subject to balance billing, and prior authorization is required for advanced imaging and specialty pharmaceuticals.</p>
+      <p>Amount due: $185.40
+        <a href="#pay" class="pay"><!-- PLANTED: icon-only link, no name, 16 px target -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#4a90d9"><path d="M2 6h20v12H2zM2 9h20v2H2z"/></svg>
+        </a>
+      </p>
+      <p><a href="statement-oct-2026.pdf">View statement</a> (PDF)</p><!-- PLANTED: statement only offered as a PDF -->
+    </div>
+  </div>
+
+  <script>
+    // The countdown is cosmetic and never logs out, so a live demo can't die.
+    let left = 120;
+    setInterval(() => {
+      left = Math.max(0, left - 1);
+      document.getElementById('timer').textContent = `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+    }, 1000);
+
+    // Typical portal validation: shows red text, but sets no aria-invalid and no link to the field.
+    document.getElementById('booking').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const phoneError = document.getElementById('phone-error');
+      phoneError.hidden = form.phone.value.trim() !== '';
+      if (!phoneError.hidden) return;
+      const when = form.time.value || 'any time';
+      const confirm = document.getElementById('confirm');
+      confirm.textContent = `Visit requested for ${form.patient_name.value || 'you'} (${when}). Confirmation SYN-1042.`;
+      confirm.hidden = false;
+      form.hidden = true;
+    });
+  </script>
+</body>
+</html>

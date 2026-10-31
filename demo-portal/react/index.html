@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- Test fixture: React-controlled inputs. The form helper must update React state, not just the DOM. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>React intake form (test fixture)</title>
+  <script src="/vendor/react.js"></script>
+  <script src="/vendor/react-dom.js"></script>
+</head>
+<body>
+  <main>
+    <h1>Intake form</h1>
+    <div id="root"></div>
+  </main>
+  <script>
+    const e = React.createElement;
+
+    function Intake() {
+      const [name, setName] = React.useState('');
+      const [reason, setReason] = React.useState('');
+      const [consent, setConsent] = React.useState(false);
+      const [sent, setSent] = React.useState(null);
+
+      const onSubmit = (event) => {
+        event.preventDefault();
+        setSent({ name, reason, consent });
+      };
+
+      return e('form', { onSubmit },
+        e('p', null, e('label', { htmlFor: 'name' }, 'Your name'), ' ',
+          e('input', { id: 'name', value: name, onChange: (ev) => setName(ev.target.value) })),
+        e('p', null, e('label', { htmlFor: 'reason' }, 'Reason'), ' ',
+          e('select', { id: 'reason', value: reason, onChange: (ev) => setReason(ev.target.value) },
+            e('option', { value: '' }, 'Choose'),
+            e('option', { value: 'checkup' }, 'Checkup'),
+            e('option', { value: 'refill' }, 'Refill'))),
+        e('p', null, e('label', null,
+          e('input', { type: 'checkbox', checked: consent, onChange: (ev) => setConsent(ev.target.checked) }),
+          ' I agree to the privacy notice')),
+        e('button', { type: 'submit' }, 'Send'),
+        // React state echo, read by the end-to-end test.
+        e('output', { id: 'state' }, JSON.stringify({ name, reason, consent })),
+        sent && e('p', { id: 'sent' }, `Sent: ${JSON.stringify(sent)}`));
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(e(Intake));
+  </script>
+</body>
+</html>

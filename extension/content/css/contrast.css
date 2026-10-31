@@ -1,0 +1,21 @@
+/* HealthBridge: high contrast (white and yellow on black).
+   Injected as a USER stylesheet, so these !important rules beat the site's own. */
+html, body,
+body *:not(img):not(picture):not(video):not(canvas):not(iframe):not(svg):not(svg *) {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+a, a *:not(svg):not(svg *) { color: #ffeb3b !important; text-decoration: underline !important; }
+/* Icons follow the text color so icon-only buttons stay visible. */
+svg[fill]:not([fill="none"]), svg [fill]:not([fill="none"]) { fill: currentColor !important; }
+svg [stroke]:not([stroke="none"]) { stroke: currentColor !important; }
+button, input, select, textarea, summary,
+[role="button"], [role="checkbox"], [role="radio"], [role="switch"], [role="combobox"], [role="textbox"] {
+  border: 2px solid #fff !important;
+}
+::placeholder { color: #c8c8c8 !important; opacity: 1 !important; }
+::selection { background: #ffeb3b !important; color: #000 !important; }
+:disabled, [aria-disabled="true"] { color: #bdbdbd !important; border-style: dashed !important; }

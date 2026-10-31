@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "HealthBridge",
+  "version": "2.0.0",
+  "description": "Accessibility helper for patient portals: easy read, a step-by-step form helper, display settings and an honest site check.",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Open HealthBridge (Alt+Shift+H)",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" }
+  },
+  "background": { "service_worker": "background.js" },
+  "side_panel": { "default_path": "sidepanel/sidepanel.html" },
+  "permissions": ["sidePanel", "activeTab", "scripting", "storage", "contextMenus"],
+  "host_permissions": ["http://localhost/*", "http://127.0.0.1/*"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+H" },
+      "description": "Open HealthBridge"
+    }
+  }
+}

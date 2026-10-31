@@ -1,0 +1,10 @@
+/* HealthBridge: stop moving things. Animations finish almost instantly and play once,
+   so pulsing badges settle and fade-in content still ends up visible. */
+*, *::before, *::after {
+  animation-duration: 0.001s !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.001s !important;
+  transition-delay: 0s !important;
+  scroll-behavior: auto !important;
+}
